@@ -1,0 +1,5 @@
+{
+  "name": "IntelliStudy - AI Study Assistant",
+  "description": "An AI-powered platform to help students learn, organize, and track their studies. Features include an AI tutor chat, document summarization, quiz and flashcard generation, and personalized study planning.",
+  "requestFramePermissions": []
+}
