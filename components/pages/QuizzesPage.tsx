@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Quiz, QuizQuestion } from '../../types';
 import Button from '../ui/Button';
@@ -8,8 +7,30 @@ import Spinner from '../ui/Spinner';
 import { useToast } from '../ui/Toast';
 import Textarea from '../ui/Textarea';
 
+const mockQuiz: Quiz = {
+  id: 'quiz-mock-1',
+  title: 'World Capitals Quiz',
+  questions: [
+    {
+      question: 'What is the capital of Canada?',
+      options: ['Toronto', 'Vancouver', 'Ottawa', 'Montreal'],
+      answer: 'Ottawa',
+    },
+    {
+      question: 'What is the capital of Australia?',
+      options: ['Sydney', 'Melbourne', 'Canberra', 'Perth'],
+      answer: 'Canberra',
+    },
+    {
+      question: 'What is the capital of Brazil?',
+      options: ['Rio de Janeiro', 'São Paulo', 'Salvador', 'Brasília'],
+      answer: 'Brasília',
+    },
+  ],
+};
+
 const QuizzesPage: React.FC = () => {
-  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [quiz, setQuiz] = useState<Quiz | null>(mockQuiz);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
@@ -61,6 +82,10 @@ const QuizzesPage: React.FC = () => {
   const restartQuiz = () => {
     setQuiz(null);
     setSourceText('');
+    setShowResults(false);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setScore(0);
   }
 
   const renderQuizContent = () => {
@@ -79,7 +104,8 @@ const QuizzesPage: React.FC = () => {
 
     return (
       <div>
-        <h2 className="text-lg font-semibold mb-4">Question {currentQuestionIndex + 1}/{quiz?.questions.length}</h2>
+        <h2 className="text-lg font-semibold mb-2">{quiz?.title}</h2>
+        <p className="text-sm text-muted-foreground mb-4">Question {currentQuestionIndex + 1}/{quiz?.questions.length}</p>
         <p className="text-xl mb-6">{currentQuestion.question}</p>
         <div className="space-y-3">
           {currentQuestion.options.map((option, index) => {
@@ -87,9 +113,9 @@ const QuizzesPage: React.FC = () => {
             const isCorrect = currentQuestion.answer === option;
             let buttonClass = 'border-border dark:border-dark-border hover:bg-accent dark:hover:bg-dark-accent';
             if (selectedAnswer) {
-              if (isSelected && isCorrect) buttonClass = 'bg-green-100 dark:bg-green-900 border-green-500';
-              else if (isSelected && !isCorrect) buttonClass = 'bg-red-100 dark:bg-red-900 border-red-500';
-              else if (isCorrect) buttonClass = 'bg-green-100 dark:bg-green-900 border-green-500';
+              if (isSelected && isCorrect) buttonClass = 'bg-green-100 dark:bg-green-900 border-green-500 text-green-800 dark:text-green-200';
+              else if (isSelected && !isCorrect) buttonClass = 'bg-red-100 dark:bg-red-900 border-red-500 text-red-800 dark:text-red-200';
+              else if (isCorrect) buttonClass = 'bg-green-100 dark:bg-green-900 border-green-500 text-green-800 dark:text-green-200';
             }
 
             return (

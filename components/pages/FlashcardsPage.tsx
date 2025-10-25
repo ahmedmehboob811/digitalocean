@@ -6,9 +6,11 @@ import Input from '../ui/Input';
 import { useToast } from '../ui/Toast';
 
 const mockFlashcards: Flashcard[] = [
-    { id: 'fc1', question: 'What is the powerhouse of the cell?', answer: 'The Mitochondria' },
-    { id: 'fc2', question: 'What does CSS stand for?', answer: 'Cascading Style Sheets' },
-    { id: 'fc3', question: 'In React, what hook is used to manage state in a functional component?', answer: 'useState' },
+    { id: 'fc1', question: 'Who invented the World Wide Web?', answer: 'Tim Berners-Lee' },
+    { id: 'fc2', question: 'What is the largest ocean on Earth?', answer: 'The Pacific Ocean' },
+    { id: 'fc3', question: 'In what year did the Titanic sink?', answer: '1912' },
+    { id: 'fc4', question: 'What is the main ingredient in guacamole?', answer: 'Avocado' },
+    { id: 'fc5', question: 'Which artist painted the Mona Lisa?', answer: 'Leonardo da Vinci' },
 ];
 
 const FlashcardsPage: React.FC = () => {
@@ -62,13 +64,13 @@ const FlashcardsPage: React.FC = () => {
                     <div className="perspective-1000">
                         <Card 
                             onClick={() => setIsFlipped(!isFlipped)}
-                            className={`w-full h-64 flex items-center justify-center text-center p-6 cursor-pointer transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+                            className={`w-full h-64 flex items-center justify-center text-center p-10 cursor-pointer transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
                         >
                             <div className="absolute w-full h-full backface-hidden flex items-center justify-center">
-                                <p className="text-xl font-semibold">{currentCard.question}</p>
+                                <p className="text-xl font-semibold leading-relaxed">{currentCard.question}</p>
                             </div>
                             <div className="absolute w-full h-full backface-hidden rotate-y-180 flex items-center justify-center">
-                                <p className="text-lg">{currentCard.answer}</p>
+                                <p className="text-lg leading-relaxed">{currentCard.answer}</p>
                             </div>
                         </Card>
                     </div>

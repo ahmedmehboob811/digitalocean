@@ -3,16 +3,12 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
 
-if (!API_KEY) {
-  // In a real app, you might want to handle this more gracefully.
-  // For this example, we'll throw an error if the key is missing.
-  console.warn("API_KEY environment variable not set. Using a placeholder. AI features will not work.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY || "mock-api-key" });
+// FIX: Only initialize GoogleGenAI if the API_KEY is available to prevent errors with mock keys.
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 const getAIResponse = async (prompt: string): Promise<string> => {
-  if (!API_KEY) return Promise.resolve("This is a mocked AI response as the API key is not configured.");
+  // FIX: Check for ai instance instead of just API_KEY.
+  if (!ai) return Promise.resolve("This is a mocked AI response as the API key is not configured.");
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -26,13 +22,15 @@ const getAIResponse = async (prompt: string): Promise<string> => {
 };
 
 const summarizeText = async (text: string): Promise<string> => {
-    if (!API_KEY) return Promise.resolve("This is a mocked summary as the API key is not configured.");
+    // FIX: Check for ai instance instead of just API_KEY.
+    if (!ai) return Promise.resolve("This is a mocked summary as the API key is not configured.");
     const prompt = `Summarize the following text in a few key bullet points:\n\n---\n\n${text}`;
     return getAIResponse(prompt);
 };
 
 const generateQuiz = async (text: string, count: number = 5): Promise<any> => {
-    if (!API_KEY) {
+    // FIX: Check for ai instance instead of just API_KEY.
+    if (!ai) {
         return Promise.resolve({
             questions: Array.from({ length: count }, (_, i) => ({
                 question: `This is mock question ${i + 1}?`,
@@ -84,7 +82,8 @@ const generateQuiz = async (text: string, count: number = 5): Promise<any> => {
 };
 
 const generateStudyPlan = async (subjects: string, hours: string): Promise<any> => {
-    if (!API_KEY) {
+    // FIX: Check for ai instance instead of just API_KEY.
+    if (!ai) {
         return Promise.resolve({
             plan: {
                 Monday: ["Study Mock Subject 1 (2 hours)"],

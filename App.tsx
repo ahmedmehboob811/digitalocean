@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import HomePage from './components/pages/HomePage';
+import LoginPage from './components/pages/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { ToastProvider, useToast } from './components/ui/Toast';
-import { mockAuthService } from './services/mockAuthService';
+import { authService } from './services/authService';
 
 export type Page = 'dashboard' | 'chat' | 'notes' | 'flashcards' | 'quizzes' | 'planner' | 'profile';
 
@@ -14,38 +13,30 @@ const AppContent: React.FC = () => {
   const { showToast } = useToast();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const user = await mockAuthService.getUser();
+    const checkAuth = () => {
+      const user = authService.getCurrentUser();
       setIsAuthenticated(!!user);
       setIsLoading(false);
     };
     checkAuth();
   }, []);
 
-  const handleLogin = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      await mockAuthService.login('user@example.com', 'password');
-      setIsAuthenticated(true);
-      showToast('Successfully logged in!', 'success');
-    } catch (error) {
-      showToast('Login failed. Please try again.', 'error');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleLoginSuccess = useCallback(() => {
+    setIsAuthenticated(true);
+    showToast('Successfully signed in!', 'success');
   }, [showToast]);
 
-  const handleLogout = useCallback(async () => {
-    await mockAuthService.logout();
+  const handleLogout = useCallback(() => {
+    authService.logout();
     setIsAuthenticated(false);
     setPage('dashboard');
-    showToast('Successfully logged out.', 'success');
+    showToast('Successfully signed out.', 'success');
   }, [showToast]);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-background">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center h-screen bg-background dark:bg-dark-background">
+        <div className="w-16 h-16 border-4 border-primary dark:border-dark-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,7 +46,7 @@ const AppContent: React.FC = () => {
       {isAuthenticated ? (
         <DashboardLayout page={page} setPage={setPage} onLogout={handleLogout} />
       ) : (
-        <HomePage onLogin={handleLogin} />
+        <LoginPage onLoginSuccess={handleLoginSuccess} />
       )}
     </>
   );
@@ -84,10 +75,6 @@ const App: React.FC = () => {
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
   
   return (
     <ToastProvider>
